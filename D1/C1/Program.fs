@@ -1,17 +1,17 @@
 open System
 open Utils
-open Utils.Functional
-open Utils.String
-open Utils.Pair
 
-let findPair = (both Seq.allPairs) >> (flip Seq.find) |> flip
+let findPair f a =
+    Seq.allPairs a a
+    |> Seq.find (Seq.fromTuple >> f)
+    |> Seq.fromTuple
 
 [<EntryPoint; STAThread>]
 let main _ =
     Clipboard.get()
-    |> linesToIntSeq
-    |> findPair (sum >> (=)2020)
-    |> multiply
+    |> String.linesToIntSeq
+    |> findPair (Seq.sum >> (=)2020)
+    |> Seq.reduce (*)
     |> string
     |> printfn " ##### Result %s"
     0

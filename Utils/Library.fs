@@ -35,13 +35,28 @@ module Seq =
     let choosei f = Seq.mapi f >> Seq.choose id
     let all f = Seq.exists (f >> (not)) >> (not)
 
+    let fromTuple (a, b) =
+        seq {
+            yield a
+            yield b
+        }
+
+    let fromTuple3 (a, b, c) =
+        seq {
+            yield a
+            yield b
+            yield c
+        }
+
 module Pair =
     let map f (a, b) = (f a, f b)
-    let sum (a, b) = a + b
-    let multiply (a, b) = a * b
 
 module Functional =
     let flip f a b = f b a
     let thd (a, b, c) = c
     let fth (a, b, c, d) = d
     let both f a = f a a
+
+module Tuple =
+    let tl f (a, b) = a :: (f b)
+    let te a = [ a ]
