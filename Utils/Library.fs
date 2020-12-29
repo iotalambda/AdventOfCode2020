@@ -23,12 +23,18 @@ module String =
     let csvToStringList = csvToStringSeq >> Seq.toList
     let csvToIntSeq = toSeq "," int
     let csvToIntList = csvToIntSeq >> Seq.toList
+    let removePart part (source: string) = source.Replace(part, "")
+    let toChars (source: string) = source.ToCharArray() |> Seq.map string
 
 module List =
     let replace<'T> ix (sub: 'T) =
         List.mapi (fun ix0 x -> if ix0 = ix then sub else x)
 
     let slice ix1 ix2 list = list |> List.skip ix1 |> List.take ix2
+    
+    let toTuple [a; b] = (a, b)
+
+    let toTuple3 [a; b; c] = (a, b, c)
 
 module Seq =
     let collecti f = Seq.mapi f >> Seq.collect id
@@ -60,3 +66,7 @@ module Functional =
 module Tuple =
     let tl f (a, b) = a :: (f b)
     let te a = [ a ]
+
+
+ module Math =
+    let testBetween f t v = if f <= v && v <= t then Some(v) else None
