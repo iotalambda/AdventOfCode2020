@@ -1,10 +1,10 @@
 open System
 open Utils
 
-let testPolicy (f, t) letter =
-    Seq.where ((=)letter)
-    >> Seq.length
-    >> Math.testBetween f t
+let testPolicy (i1, i2) letter (pw: String) =
+    match pw.[i1-1] = letter <> (pw.[i2-1] = letter) with
+    | true -> Some pw
+    | _ -> None
 
 [<EntryPoint; STAThread>]
 let main _ =

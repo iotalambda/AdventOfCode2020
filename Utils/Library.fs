@@ -24,7 +24,6 @@ module String =
     let csvToIntSeq = toSeq "," int
     let csvToIntList = csvToIntSeq >> Seq.toList
     let removePart part (source: string) = source.Replace(part, "")
-    let toChars (source: string) = source.ToCharArray() |> Seq.map string
 
 module List =
     let replace<'T> ix (sub: 'T) =
