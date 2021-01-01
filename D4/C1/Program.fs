@@ -1,6 +1,5 @@
 open System
 open Utils
-open Utils.Functional
 
 let required =
     List.sort [ "byr"

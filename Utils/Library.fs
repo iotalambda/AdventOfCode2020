@@ -13,7 +13,7 @@ module Functional =
     let thd (a, b, c) = c
     let fth (a, b, c, d) = d
     let both f a = f a a
-    let tuple2 a b = a, b
+    let tuple a b = a, b
     let tuple3 a b c = a, b, c
     let tuple4 a b c d = a, b, c, d
     let tuple5 a b c d e = a, b, c, d, e
@@ -104,3 +104,36 @@ module Boolean =
 
     let testEquality a b = a = b |> toOption a
     let testEqualityFor result a = (=) a >> toOption result
+
+module ActivePatterns =
+
+    open System
+    open System.Text.RegularExpressions
+
+    let (|Suffix|_|) (suffix: string) (source: string) =
+        if source.EndsWith(suffix) then
+            Some(source.Substring(0, source.Length - suffix.Length))
+        else
+            None
+
+    let (|Int|_|) (source: string) =
+        match Int32.TryParse source with
+        | true, int -> Some int
+        | _ -> None
+
+    let (|Regex|_|) pattern source =
+        let m = Regex.Match(source, pattern)
+
+        if m.Success then
+            Some(List.tail [ for g in m.Groups -> g.Value ])
+        else
+            None
+
+    let (|Between|_|) f t =
+        function
+        | Int v -> Math.testBetween f t v
+        | _ -> None
+
+    let (|In|_|) values source =
+        Seq.contains source values
+        |> Boolean.toOption source
