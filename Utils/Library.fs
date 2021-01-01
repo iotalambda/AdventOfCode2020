@@ -1,6 +1,30 @@
-﻿namespace Utils
+﻿#nowarn "40"
+
+namespace Utils
 
 open TextCopy
+open System.Collections.Generic
+
+module Pair =
+    let map f (a, b) = (f a, f b)
+
+module Functional =
+    let flip f a b = f b a
+    let thd (a, b, c) = c
+    let fth (a, b, c, d) = d
+    let both f a = f a a
+    let tuple2 a b = a, b
+    let tuple3 a b c = a, b, c
+    let tuple4 a b c d = a, b, c, d
+    let tuple5 a b c d e = a, b, c, d, e
+    let tuple6 a b c d e f = a, b, c, d, e, f
+
+module Math =
+    let testBetween f t v =
+        if f <= v && v <= t then
+            Some(v)
+        else
+            None
 
 module Clipboard =
     let get () = ClipboardService.GetText()
@@ -23,7 +47,15 @@ module String =
     let csvToStringList = csvToStringSeq >> Seq.toList
     let csvToIntSeq = toSeq "," int
     let csvToIntList = csvToIntSeq >> Seq.toList
-    let removePart part (source: string) = source.Replace(part, "")
+    let replace (oldValue: string) newValue (source: string) = source.Replace(oldValue, newValue)
+    let removePart part = replace part ""
+
+    let rec repeat =
+        Functional.flip
+        <| (fun source ->
+            function
+            | gt0 when gt0 > 0 -> source + (repeat (gt0 - 1) source)
+            | _ -> "")
 
 module List =
     let replace<'T> ix (sub: 'T) =
@@ -31,13 +63,20 @@ module List =
 
     let slice ix1 ix2 list = list |> List.skip ix1 |> List.take ix2
 
-    let toTuple [ a; b ] = (a, b)
+    let toTuple =
+        function
+        | [ a; b ] -> (a, b)
+        | _ -> failwith ""
 
-    let toTuple3 [ a; b; c ] = (a, b, c)
+    let toTuple3 =
+        function
+        | [ a; b; c ] -> (a, b, c)
+        | _ -> failwith ""
 
 module Seq =
     let collecti f = Seq.mapi f >> Seq.collect id
     let choosei f = Seq.mapi f >> Seq.choose id
+    let choose2 f a b = Seq.map2 f a b |> Seq.choose id
     let all f = Seq.exists (f >> (not)) >> (not)
 
     let fromTuple (a, b) =
@@ -53,22 +92,15 @@ module Seq =
             yield c
         }
 
-module Pair =
-    let map f (a, b) = (f a, f b)
+module Dict =
+    let keys (source: IDictionary<'a, 'b>) = source.Keys
 
-module Functional =
-    let flip f a b = f b a
-    let thd (a, b, c) = c
-    let fth (a, b, c, d) = d
-    let both f a = f a a
+module Boolean =
+    let toOption source =
+        (=) true
+        >> function
+        | true -> Some source
+        | _ -> None
 
-module Tuple =
-    let tl f (a, b) = a :: (f b)
-    let te a = [ a ]
-
-module Math =
-    let testBetween f t v =
-        if f <= v && v <= t then
-            Some(v)
-        else
-            None
+    let testEquality a b = a = b |> toOption a
+    let testEqualityFor result a = (=) a >> toOption result
