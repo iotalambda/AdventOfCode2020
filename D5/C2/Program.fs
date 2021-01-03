@@ -20,7 +20,7 @@ let main _ =
     |> Seq.map getSeatId
     |> Seq.sort
     |> Seq.pairwise
-    |> Seq.find (fun (l, r) -> r = l + 2)
+    |> Seq.find ((<||) (-) >> (=) -2)
     |> fst
     |> (+) 1
 
