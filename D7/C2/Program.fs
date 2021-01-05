@@ -2,33 +2,39 @@ open System
 open Utils
 open Utils.ActivePatterns
 
+type Node = string * string
+type Edge = { Src: Node; Tgt: Node; Amt: int }
+
 let getGraph =
     Seq.collect
         (function
         | co1 :: co2 :: _ :: _ :: (((Int _) :: _) & tail) ->
             let rec getEdges =
                 function
-                | _ :: ci1 :: ci2 :: _ :: tail -> ((ci1, ci2), (co1, co2)) :: (getEdges tail)
+                | (Int amt) :: ci1 :: ci2 :: _ :: tail ->
+                    { Src = (co1, co2)
+                      Tgt = (ci1, ci2)
+                      Amt = amt }
+                    :: getEdges tail
                 | _ -> []
 
             getEdges tail
         | _ -> [])
-    >> Seq.groupBy fst
-    >> Seq.map (fun (k, vs) -> k, vs |> Seq.map snd |> Seq.toList)
+    >> Seq.groupBy (fun e -> e.Src)
+    >> Seq.map (fun (k, vs) -> k, vs |> Seq.toList)
     >> dict
 
-let getChildNodes startAt graph =
+let getChildAmount startAt graph =
     let rec traverse node visited =
         match graph |> Dict.tryItem node with
         | Some cs ->
             cs
-            |> List.except visited
             |> List.fold
-                (fun (cs, visited) c ->
+                (fun (total, visited) { Tgt = c; Amt = amt } ->
                     traverse c (Set.add c visited)
-                    |> fun (subcs, visited) -> c :: subcs @ cs, visited)
-                ([], visited)
-        | None -> [], visited
+                    |> fun (subcs, visited) -> total + (1 + subcs) * amt, visited)
+                (0, visited)
+        | None -> 0, visited
 
     traverse startAt Set.empty |> fst
 
@@ -43,8 +49,7 @@ let main _ =
 
     // Do the thing
     |> getGraph
-    |> getChildNodes ("shiny", "gold")
-    |> Seq.length
+    |> getChildAmount ("shiny", "gold")
 
     // Output result
     |> printfn " ##### Result %d"
