@@ -3,7 +3,7 @@ open Utils
 open Utils.ActivePatterns
 
 let getGraph =
-    List.collect
+    Seq.collect
         (function
         | co1 :: co2 :: _ :: _ :: (((Int _) :: _) & tail) ->
             let rec getEdges =
@@ -13,8 +13,8 @@ let getGraph =
 
             getEdges tail
         | _ -> [])
-    >> List.groupBy fst
-    >> List.map (fun (k, vs) -> k, vs |> Seq.map snd)
+    >> Seq.groupBy fst
+    >> Seq.map (fun (k, vs) -> k, vs |> Seq.map snd |> Seq.toList)
     >> dict
 
 let getChildNodes startAt graph =
