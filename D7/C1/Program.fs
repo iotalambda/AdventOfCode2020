@@ -14,7 +14,7 @@ let getGraph =
             getEdges tail
         | _ -> [])
     >> List.groupBy fst
-    >> List.map (fun (k, vs) -> k, vs |> Seq.map snd)
+    >> List.map (fun (k, vs) -> k, vs |> List.map snd)
     >> dict
 
 let getChildNodes startAt graph =
