@@ -456,3 +456,4 @@ Scripts/
 
 
 .ionide
+.ionide/symbolCache.db

@@ -39,6 +39,7 @@ module String =
         |> Seq.map (converter)
 
     let split s = toSeq s id >> Seq.toList
+    let splitAt ix (s: string) = s.Substring(0, ix), s.Substring(ix)
     let linesToSeq converter = toSeq newline converter
     let linesToStringSeq = linesToSeq id
     let linesToStringList = linesToStringSeq >> Seq.toList
@@ -74,6 +75,9 @@ module List =
         | _ -> failwith ""
 
 module Seq =
+    let foldi f s =
+        Seq.mapi Functional.tuple >> Seq.fold f s
+
     let collecti f = Seq.mapi f >> Seq.collect id
     let choosei f = Seq.mapi f >> Seq.choose id
     let choose2 f a b = Seq.map2 f a b |> Seq.choose id
@@ -94,6 +98,10 @@ module Seq =
 
 module Dict =
     let keys (source: IDictionary<'a, 'b>) = source.Keys
+
+    let tryItem key (source: IDictionary<'a, 'b>) =
+        let (found, value) = source.TryGetValue key
+        if found then Some value else None
 
 module Boolean =
     let toOption source =
