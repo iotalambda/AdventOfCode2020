@@ -1,10 +1,10 @@
 open System
 open Utils
 
-let testAccAtEof (program: list<string * int>) =
-    let eof = program |> Seq.length
+let testAccAtEof program =
+    let eof = program |> List.length
 
-    let rec testAccAtEofRec ix acc (ixsHistory: Set<int>) =
+    let rec testAccAtEofRec ix acc ixsHistory =
         match program.[ix] with
         | "nop", _ -> ix + 1, acc
         | "jmp", increment -> ix + increment, acc
@@ -12,7 +12,7 @@ let testAccAtEof (program: list<string * int>) =
         | _ -> failwith ""
         |> function
         | ix', acc' when ix' = eof -> Some acc'
-        | ix', _ when ixsHistory.Contains ix' -> None
+        | ix', _ when ixsHistory |> Set.contains ix' -> None
         | ix', acc' -> testAccAtEofRec ix' acc' (ixsHistory.Add ix')
 
     testAccAtEofRec 0 0 Set.empty
