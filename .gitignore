@@ -455,5 +455,4 @@ bower_components
 Scripts/
 
 
-.ionide
-.ionide/symbolCache.db
+.ionide/
