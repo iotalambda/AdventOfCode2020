@@ -8,10 +8,9 @@ let tryPickTerms sum candidates =
         | a, b when a + b = sum && a <> b -> Some(a, b)
         | _ -> None)
 
-let pickWithoutTerms premableSize arr =
-    arr
-    |> Seq.windowed (premableSize + 1)
-    |> Seq.pick
+let pickWithoutTerms premableSize =
+    Seq.windowed (premableSize + 1)
+    >> Seq.pick
         (fun windowAndLast ->
             let sum = windowAndLast |> Seq.last
 
