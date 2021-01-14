@@ -2,8 +2,8 @@ open System
 open Utils
 open Utils.Functional
 
-let n1 = int64 1
 let n0 = int64 0
+let n1 = int64 1
 let n4 = int64 4
 
 [<EntryPoint; STAThread>]
@@ -23,16 +23,15 @@ let main _ =
         |> List.fold
             (fun (hist: list<int64>) (i, jolt) ->
                 let next =
-                    (seq {
+                    seq {
                         2
                         3
-                     })
+                    }
                     |> Seq.sumBy
                         (fun j ->
-                            if i >= j && jolt - l.[i - j] < n4 then
-                                hist.[j - 2]
-                            else
-                                n0)
+                            match i >= j && jolt - l.[i - j] < n4 with
+                            | true -> hist.[j - 2]
+                            | _ -> n0)
                     |> (+) hist.[2]
 
                 next :: [ hist.[2]; hist.[1] ] |> List.rev)
