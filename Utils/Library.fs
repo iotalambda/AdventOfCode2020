@@ -53,6 +53,9 @@ module String =
     let replace (oldValue: string) newValue (source: string) = source.Replace(oldValue, newValue)
     let removePart part = replace part ""
 
+    let charsTo2dList =
+        linesToStringList >> List.map (Seq.toList)
+
     let rec repeat =
         Functional.flip
         <| (fun source ->
@@ -97,6 +100,9 @@ module Seq =
             yield b
             yield c
         }
+
+    let inline equalBy f l1 l2 =
+        Seq.fold (&&) true (Seq.zip l1 l2 |> Seq.map f)
 
 module Dict =
     let keys (source: IDictionary<'a, 'b>) = source.Keys
