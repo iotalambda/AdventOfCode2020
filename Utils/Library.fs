@@ -102,7 +102,7 @@ module Seq =
         }
 
     let inline equalBy f l1 l2 =
-        Seq.fold (&&) true (Seq.zip l1 l2 |> Seq.map f)
+        Seq.fold (&&) true (Seq.zip l1 l2 |> Seq.map ((<||) f))
 
 module Dict =
     let keys (source: IDictionary<'a, 'b>) = source.Keys
