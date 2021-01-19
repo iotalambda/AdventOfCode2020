@@ -37,7 +37,7 @@ let rec applyRulesUntilStabilized l =
                             >= 4 -> 'L'
                         | x -> x))
 
-    match Seq.equalBy ((<||) (Seq.equalBy ((<||) (=)))) l l' with
+    match Seq.equalBy (Seq.equalBy (=)) l l' with
     | true -> l'
     | _ -> applyRulesUntilStabilized l'
 
