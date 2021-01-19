@@ -28,15 +28,13 @@ let navigate =
                     let amop =
                         match op with
                         | 'L' -> id
-                        | 'R' -> (*) -1.
-                        | _ -> failwith ""
+                        | _ -> (*) -1.
 
                     sx + dist * Math.Cos(angle + toRad (amop am)), sy + dist * Math.Sin(angle + toRad (amop am))
                 | 'N' -> wx, wy + am
                 | 'S' -> wx, wy - am
                 | 'E' -> wx + am, wy
-                | 'W' -> wx - am, wy
-                | _ -> failwith "")
+                | _ -> wx - am, wy)
         ((0., 0.), (10., 1.))
     >> fst
 
