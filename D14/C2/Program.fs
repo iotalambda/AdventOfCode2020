@@ -1,8 +1,6 @@
 open System
 open Utils
-open Utils.Functional
 
-let zero = int64 (0)
 
 let toOr =
     String.replace "X" "0"
@@ -55,7 +53,7 @@ let exec program =
             | _ -> failwith ""
         | [] -> reg
 
-    aux zero [] Map.empty program
+    aux (int64 (0)) [] Map.empty program
 
 [<EntryPoint; STAThread>]
 let main _ =
